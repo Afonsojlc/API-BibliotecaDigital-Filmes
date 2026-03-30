@@ -11,7 +11,9 @@ const app = express();
 
 // 🔧 Configuração Correta do Adaptador SQLite
 const db = new Database("./prisma/dev.db"); // Aponta diretamente para o teu ficheiro dev.db
-const adapter = new PrismaBetterSqlite3(db);
+const adapter = new PrismaBetterSqlite3({
+    url: "file:./prisma/dev.db" // O adaptador usa este formato de URL internamente
+});
 const prisma = new PrismaClient({ adapter });
 
 // Middlewares obrigatórios
