@@ -4,10 +4,22 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js" 
 }
 
 datasource db {
   provider = "sqlite"
+}
+model Director{
+  id Int @id @default(autoincrement())
+  nome String
+  filmes Filme[]
+}
+
+model Filme{
+  id Int @id @default(autoincrement())
+  titulo String
+  ano Int
+  directorId Int 
+  director Director @relation(fields:[directorId],references:[id])
 }
