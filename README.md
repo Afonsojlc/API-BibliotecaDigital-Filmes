@@ -1,181 +1,98 @@
+```
+# 🎬 API de Biblioteca Digital de Filmes
 
-# 🎬 Biblioteca Digital de Filmes API
-
-![Node.js](https://img.shields.io/badge/Node.js-18+-green)
-![Express](https://img.shields.io/badge/Express.js-Backend-black)
-![SQLite](https://img.shields.io/badge/SQLite-Database-blue)
-![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
 ![JWT](https://img.shields.io/badge/Auth-JWT-orange)
 
----
-
 ## 📖 Descrição
+Esta é uma **API RESTful profissional** desenvolvida para a gestão de uma Biblioteca Digital de Filmes. O sistema permite o controlo total sobre um catálogo de filmes e diretores, integrando uma camada de segurança robusta para proteger operações de criação, atualização e eliminação de dados.
 
-API RESTful profissional para gestão de uma Biblioteca Digital de Filmes.
+## 🚀 Tecnologias Utilizadas
+* **Backend:** Node.js com Express.js.
+* **ORM:** Prisma v7.
+* **Base de Dados:** SQLite (via `better-sqlite3`).
+* **Autenticação:** JSON Web Token (JWT).
+* **Segurança:** Encriptação de passwords com Bcrypt.
 
-Inclui:
-- CRUD completo de filmes
-- Autenticação JWT
-- Segurança com bcrypt
-- ORM com Prisma
-- Estrutura escalável estilo empresa
+## 🏗️ Estrutura da Base de Dados
+A API utiliza os seguintes modelos de dados:
+* **User:** Gestão de utilizadores com nome, email e password encriptada.
+* **Director:** Registo dos diretores de cinema.
+* **Filme:** Registo de filmes associados a um diretor.
 
----
+## ⚙️ Instalação e Execução
 
-## 🏗️ Arquitetura Profissional
-
-```
-src/
-├── controllers/
-├── routes/
-├── services/
-├── middlewares/
-├── prisma/
-├── utils/
-└── app.js
-```
-
-### Fluxo
-
-```
-Client → Routes → Controller → Service → Prisma → DB
-```
-
----
-
-## ⚙️ Setup Completo
-
-### Instalar dependências
-
+### 1. Clonar e Instalar
 ```bash
 npm install
-npm install express cors morgan dotenv
-npm install jsonwebtoken bcrypt
-npm install @prisma/client @prisma/adapter-better-sqlite3
-npm install prisma --save-dev
+
 ```
 
----
+### 2\. Configurar Variáveis de Ambiente (.env)
 
-### Configurar .env
+Cria um ficheiro `.env` na raiz do projeto com:
 
-```env
-SERVER_PORT=3000
-DATABASE_URL="file:./dev.db"
-JWT_SECRET="super_secret_key"
+Fragmento do código
+
+```
+SERVER_PORT=4242
+DATABASE_URL="file:./prisma/dev.db"
+JWT_SECRET="tua_chave_secreta_aqui"
+
 ```
 
----
+### 3\. Preparar a Base de Dados
 
-### Prisma
+Bash
 
-```bash
-npx prisma init
+```
 npx prisma db push
 npx prisma generate
+
 ```
 
----
+### 4\. Iniciar o Servidor
 
-### Run
+Bash
 
-```bash
+```
 npm run dev
-```
-
----
-
-## 🔐 Autenticação
-
-Header obrigatório:
 
 ```
-Authorization: Bearer <token>
-```
 
----
+📡 Endpoints da API
+-------------------
 
-## 📡 Endpoints
+### Autenticação (Público)
 
-### Auth
+| **Método** | **Endpoint** | **Descrição** |
+| --- | --- | --- |
+| `POST` | `/auth/signup` | Registo de novo utilizador |
+| `POST` | `/auth/signin` | Login e obtenção de Token JWT |
 
-| Método | Endpoint |
-|--------|---------|
-| POST | /auth/signup |
-| POST | /auth/signin |
+### Catálogo de Filmes
 
-### Filmes
+| **Método** | **Endpoint** | **Autenticação** |
+| --- | --- | --- |
+| `GET` | `/filmes` | ❌ Pública |
+| `GET` | `/filmes/:id` | ❌ Pública |
+| `POST` | `/filmes` | ✅ Bearer JWT |
+| `PUT` | `/filmes/:id` | ✅ Bearer JWT |
+| `DELETE` | `/filmes/:id` | ✅ Bearer JWT |
 
-| Método | Endpoint | Auth |
-|--------|---------|------|
-| GET | /filmes | ❌ |
-| GET | /filmes/:id | ❌ |
-| POST | /filmes | ✅ |
-| PUT | /filmes/:id | ✅ |
-| DELETE | /filmes/:id | ✅ |
+🛡️ Segurança Implementada
+--------------------------
 
----
+-   **Passwords Hashed:** Utilização de Bcrypt para garantir que as passwords nunca são guardadas em texto simples.
 
-## 📥 Exemplos
+-   **Proteção de Rotas:** Middleware `authenticateToken` que valida o JWT antes de permitir operações de escrita.
 
-### Signup
+🧪 Postman
+----------
 
-```json
-{
-  "name": "Ana",
-  "email": "ana@email.com",
-  "password": "123456"
-}
-```
+Podes testar todos os endpoints importando o ficheiro incluído no repositório:
 
----
-
-### Signin Response
-
-```json
-{
-  "token": "jwt_token"
-}
-```
-
----
-
-### Criar Filme
-
-```json
-{
-  "titulo": "Interstellar",
-  "ano": 2014,
-  "directorId": 1
-}
-```
-
----
-
-## 🛡️ Segurança
-
-- bcrypt hashing
-- JWT expiração
-- Middleware auth
-- Validação de inputs
-
----
-
-## 🧪 Postman
-
-Importar ficheiro incluído no repo.
-
----
-
-## 🚀 Melhorias Enterprise
-
-- Separação em camadas (Controller/Service)
-- Código modular
-- Escalável
-- Preparado para deploy
-
----
-
-## 👨‍💻 Autor
-
-Projeto académico — Programação Web
+`API-BibliotecaDigital-Filmes.postman_collection.json`.
