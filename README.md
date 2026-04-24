@@ -32,18 +32,19 @@ Cria um ficheiro `.env` na raiz do projeto com as seguintes variáveis:
 
 ```
 SERVER_PORT=4242DATABASE_URL="file:./prisma/dev.db"JWT_SECRET="tua_chave_secreta_aqui"
-```\
+```
 **3\. Preparação da Base de Dados (Prisma)**\
 Executa os comandos para sincronizar o schema e gerar o cliente:
 
 ```
 npx prisma db pushnpx prisma generate
-```\
+```
 **4\. Executar o Servidor**
 
 ```
 npm run dev
-```\
+```
+
 **📡 Documentação da API**\
 **🔐 Autenticação (Acesso Público)**
 
@@ -64,7 +65,7 @@ POST `/auth/signup`
 
 ```
 {  "name": "Afonso Carvalho",  "email": "afonso@email.com",  "password": "password123"}
-```\
+```
 **Login (Autenticação)**\
 POST `/auth/signin` -> Retorna: `{ "token": "eyJhbG..." }`\
 **Criar Filme (Requer Token no Header)**\
@@ -73,7 +74,7 @@ POST `/filmes`\
 
 ```
 {  "titulo": "Inception",  "ano": 2010,  "directorId": 1}
-```\
+```
 **🛡️ Segurança & Boas Práticas**
 
 -   **Hashing Dinâmico:** Utilização de Bcrypt com salt rounds para proteção contra ataques de dicionário.
