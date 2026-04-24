@@ -1,4 +1,3 @@
-
 # 🎬 API de Biblioteca Digital de Filmes
 
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
@@ -8,90 +7,84 @@
 ![JWT](https://img.shields.io/badge/Auth-JWT-orange)
 
 ## 📖 Descrição
-Esta é uma **API RESTful profissional** desenvolvida para a gestão de uma Biblioteca Digital de Filmes. O sistema permite o controlo total sobre um catálogo de filmes e diretores, integrando uma camada de segurança robusta para proteger operações de criação, atualização e eliminação de dados.
+Esta é uma **API RESTful profissional** desenvolvida para a gestão de uma Biblioteca Digital de Filmes. O projeto integra um sistema completo de gestão de filmes e diretores com uma camada de segurança robusta baseada em autenticação JWT (Stateless) e encriptação de dados sensíveis.
 
-## 🚀 Tecnologias Utilizadas
-* **Backend:** Node.js com Express.js.
-* **ORM:** Prisma v7.
-* **Base de Dados:** SQLite (via `better-sqlite3`).
-* **Autenticação:** JSON Web Token (JWT).
-* **Segurança:** Encriptação de passwords com Bcrypt.
+Desenvolvido como projeto final no âmbito da unidade curricular de **Programação Web / Backend**.
 
-## 🏗️ Estrutura da Base de Dados
-A API utiliza os seguintes modelos de dados:
-* **User:** Gestão de utilizadores com nome, email e password encriptada.
-* **Director:** Registo dos diretores de cinema.
-* **Filme:** Registo de filmes associados a um diretor.
+---
 
-## ⚙️ Instalação e Execução
+## 🚀 Funcionalidades & Arquitetura
+* **CRUD Completo:** Gestão de Filmes e Diretores com validações de integridade.
+* **Segurança Enterprise:** Hashing de passwords com **Bcrypt** e autenticação via **Bearer Tokens (JWT)**.
+* **ORM Moderno:** Utilização de Prisma v7 para modelação de dados e consultas seguras.
+* **Middleware Layer:** Implementação de logs (Morgan), controlo de acesso (CORS) e proteção de rotas.
 
-### 1. Clonar e Instalar
+---
+
+## ⚙️ Setup e Instalação
+
+### 1. Clonar e Instalar Dependências
 ```bash
 npm install
 ```
-
-### 2\. Configurar Variáveis de Ambiente (.env)
-
-Cria um ficheiro `.env` na raiz do projeto com:
-
-Fragmento do código
+**2\. Configuração do Ambiente (.env)**\
+Cria um ficheiro `.env` na raiz do projeto com as seguintes variáveis:
 
 ```
-SERVER_PORT=4242
-DATABASE_URL="file:./prisma/dev.db"
-JWT_SECRET="tua_chave_secreta_aqui"
+SERVER_PORT=4242DATABASE_URL="file:./prisma/dev.db"JWT_SECRET="tua_chave_secreta_aqui"
+```\
+**3\. Preparação da Base de Dados (Prisma)**\
+Executa os comandos para sincronizar o schema e gerar o cliente:
 
 ```
-
-### 3\. Preparar a Base de Dados
-
-Bash
-
-```
-npx prisma db push
-npx prisma generate
-
-```
-
-### 4\. Iniciar o Servidor
-
-Bash
+npx prisma db pushnpx prisma generate
+```\
+**4\. Executar o Servidor**
 
 ```
 npm run dev
+```\
+**📡 Documentação da API**\
+**🔐 Autenticação (Acesso Público)**
+
+| Método | Endpoint | Descrição |
+| POST | /auth/signup | Regista um utilizador com password encriptada |
+| POST | /auth/signin | Autentica e gera o Token de acesso JWT |\
+**🎥 Gestão de Filmes**
+
+| Método | Endpoint | Descrição | Proteção |
+| GET | /filmes | Lista todos os filmes e respetivos diretores | ❌ Livre |
+| GET | /filmes/:id | Detalhes técnicos de um filme específico | ❌ Livre |
+| POST | /filmes | Adiciona um novo filme ao catálogo | ✅ JWT |
+| PUT | /filmes/:id | Atualiza metadados de um filme | ✅ JWT |
+| DELETE | /filmes/:id | Remove um filme permanentemente | ✅ JWT |\
+**📥 Exemplos de Pedidos (Payloads)**\
+**Signup (Registo)**\
+POST `/auth/signup`
 
 ```
+{  "name": "Afonso Carvalho",  "email": "afonso@email.com",  "password": "password123"}
+```\
+**Login (Autenticação)**\
+POST `/auth/signin` -> Retorna: `{ "token": "eyJhbG..." }`\
+**Criar Filme (Requer Token no Header)**\
+POST `/filmes`\
+*Header: Authorization: Bearer <token>*
 
-📡 Endpoints da API
--------------------
+```
+{  "titulo": "Inception",  "ano": 2010,  "directorId": 1}
+```\
+**🛡️ Segurança & Boas Práticas**
 
-### Autenticação (Público)
+-   **Hashing Dinâmico:** Utilização de Bcrypt com salt rounds para proteção contra ataques de dicionário.
 
-| **Método** | **Endpoint** | **Descrição** |
-| --- | --- | --- |
-| `POST` | `/auth/signup` | Registo de novo utilizador |
-| `POST` | `/auth/signin` | Login e obtenção de Token JWT |
+-   **JWT Stateless:** Tokens assinados com validade temporal para sessões seguras.
 
-### Catálogo de Filmes
+-   **Middlewares de Erro:** Captura centralizada de erros 404 (Rota não encontrada) e 500 (Erro interno).
 
-| **Método** | **Endpoint** | **Autenticação** |
-| --- | --- | --- |
-| `GET` | `/filmes` | ❌ Pública |
-| `GET` | `/filmes/:id` | ❌ Pública |
-| `POST` | `/filmes` | ✅ Bearer JWT |
-| `PUT` | `/filmes/:id` | ✅ Bearer JWT |
-| `DELETE` | `/filmes/:id` | ✅ Bearer JWT |
-
-🛡️ Segurança Implementada
---------------------------
-
--   **Passwords Hashed:** Utilização de Bcrypt para garantir que as passwords nunca são guardadas em texto simples.
-
--   **Proteção de Rotas:** Middleware `authenticateToken` que valida o JWT antes de permitir operações de escrita.
-
-🧪 Postman
-----------
-
-Podes testar todos os endpoints importando o ficheiro incluído no repositório:
-
-`API-BibliotecaDigital-Filmes.postman_collection.json`.
+**🧪 Postman Collection**\
+Para testar todos os cenários da API, importa o ficheiro incluído na raiz:\
+📂 `API-BibliotecaDigital-Filmes.postman_collection.json`\
+**👨‍💻 Autor**\
+Afonso José Lopes Carvalho\
+*Estudante de Tecnologias e Programação de Sistemas de Informação*
