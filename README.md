@@ -28,7 +28,7 @@ A API utiliza os seguintes modelos de dados:
 ### 1. Clonar e Instalar
 ```bash
 npm install
-
+```
 
 ### 2\. Configurar Variáveis de Ambiente (.env)
 
