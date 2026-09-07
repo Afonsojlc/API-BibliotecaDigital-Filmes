@@ -1,0 +1,303 @@
+﻿{
+  "info": {
+    "name": "Movie Catalog API",
+    "_postman_id": "c1f7b889-4e78-43d1-912a-436f56d60c2b",
+    "description": "Production-ready Postman collection for the Movie Catalog RESTful API. Includes automated JWT token extraction for seamless authenticated requests.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4242",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "Sign Up (Register)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Afonso Carvalho\",\n  \"email\": \"afonso@example.com\",\n  \"password\": \"SecurePass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/signup",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "signup"]
+            },
+            "description": "Registers a new user and returns user metadata (excluding password hash)."
+          },
+          "response": []
+        },
+        {
+          "name": "Sign In (Login)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var data = pm.response.json();",
+                  "    if (data.token) {",
+                  "        pm.collectionVariables.set(\"token\", data.token);",
+                  "        console.log(\"✅ Token successfully saved to collection variable 'token'\");",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"demo@example.com\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/signin",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "signin"]
+            },
+            "description": "Authenticates user credentials and automatically populates the {{token}} variable."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Directors",
+      "item": [
+        {
+          "name": "List All Directors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/directores",
+              "host": ["{{baseUrl}}"],
+              "path": ["directores"]
+            },
+            "description": "Retrieves all directors and their associated filmography."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Director by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/directores/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["directores", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Retrieves a specific director and their movies."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Director (Protected)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Steven Spielberg\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/directores",
+              "host": ["{{baseUrl}}"],
+              "path": ["directores"]
+            },
+            "description": "Creates a new director record. Requires Bearer JWT authentication."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Movies",
+      "item": [
+        {
+          "name": "List All Movies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/filmes",
+              "host": ["{{baseUrl}}"],
+              "path": ["filmes"]
+            },
+            "description": "Retrieves all movies with director details."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Movie by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/filmes/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["filmes", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Retrieves a single movie by ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Movie (Protected)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Jurassic Park\",\n  \"ano\": 1993,\n  \"directorId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/filmes",
+              "host": ["{{baseUrl}}"],
+              "path": ["filmes"]
+            },
+            "description": "Creates a new movie linked to a director. Requires Bearer JWT authentication."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Movie (Protected)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Interstellar (IMAX Remastered)\",\n  \"ano\": 2014\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/filmes/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["filmes", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Updates an existing movie record. Requires Bearer JWT authentication."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Movie (Protected)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/filmes/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["filmes", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Deletes a movie by ID. Requires Bearer JWT authentication."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,14 +1,17 @@
-{
-  "name": "pw-p-lab-049948",
+﻿{
+  "name": "movie-catalog-api",
   "version": "1.0.0",
-  "description": "API REST - Programação Web",
-  "license": "ISC",
+  "description": "RESTful API for movie and director catalog management built with Node.js, Express, Prisma ORM, SQLite, and JWT authentication.",
+  "license": "MIT",
   "author": "Afonso José Lopes Carvalho",
   "type": "commonjs",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "seed": "node prisma/seed.js",
+    "prisma:push": "prisma db push",
+    "prisma:studio": "prisma studio"
   },
   "dependencies": {
     "@prisma/adapter-better-sqlite3": "^7.6.0",
